@@ -3,6 +3,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { CustomerModule } from './customer/customer.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -17,10 +18,13 @@ import { TypeOrmModule } from '@nestjs/typeorm';
         username:configService.get('DB_USERNAME'),
         password:configService.get('DB_PASSWORD'),
         database:configService.get('DB_DATABASE'),
+        synchronize:false,
+        autoLoadEntities:true
       }),
       inject:[ConfigService]
     
-    })
+    }),
+    CustomerModule
   ],
   controllers: [AppController],
   providers: [AppService],
