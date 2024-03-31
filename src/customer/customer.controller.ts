@@ -18,6 +18,11 @@ export class CustomerController {
     return this.customerService.findAll(params);
   }
 
+  @Get('/find')
+  findByName(@Query('name') name:string) {
+    return this.customerService.findByName(name);
+  }
+
   @Get(':id')
   findOne(@Param('id') id: number) {
     return this.customerService.findOne(+id);
