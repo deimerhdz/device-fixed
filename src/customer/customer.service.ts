@@ -3,7 +3,7 @@ import { CreateCustomerDto } from './dto/create-customer.dto';
 import { UpdateCustomerDto } from './dto/update-customer.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Customer } from './entities/customer.entity';
-import {  Repository } from 'typeorm';
+import {  Like, Repository } from 'typeorm';
 import { PaginationQueryDto } from '../dtos/pagination.query.dto';
 
 @Injectable()
@@ -18,7 +18,7 @@ export class CustomerService {
   }
 
   async findAll({limit,offset}:PaginationQueryDto) {
-    return this.customerRepository.find({skip:offset,take:limit});
+    return this.customerRepository.find({skip:offset,take:limit,order: {id: "DESC"}});
   }
 
   async findOne(id: number) {
@@ -27,7 +27,15 @@ export class CustomerService {
       throw new NotFoundException('customer not found')
     }
     return customer;
-}
+ }
+
+ async findByName(name:string){
+  const customers = await this.customerRepository.findBy({
+    name:Like(`%${name}%`)
+  })
+
+  return customers;
+ }
 
   async update(id: number, updateCustomerDto: UpdateCustomerDto) {
     return this.customerRepository.update(id,updateCustomerDto);
