@@ -1,10 +1,12 @@
 import {config } from 'dotenv'
-import {DataSource} from 'typeorm'
+import {DataSource, DataSourceOptions} from 'typeorm'
+import InitSeeder from './src/database/seeds/init.seeder';
+import { SeederOptions } from 'typeorm-extension';
 const env = process.env.NODE_ENV = 'development'
 config({
     path:`.env.${env}`
 })
-export default new DataSource({
+const options={
     type:'mysql',
     host:process.env.DB_HOST,
     port:parseInt(process.env.DB_PORT),
@@ -12,5 +14,7 @@ export default new DataSource({
     password:process.env.DB_PASSWORD,
     database:process.env.DB_DATABASE,
     entities:['src/**/*.entity.ts'],
-    migrations:['src/database/migrations/*.ts']
-})
+    migrations:['src/database/migrations/*.ts'],
+    seeds: [InitSeeder]
+}
+export default new DataSource( options as DataSourceOptions & SeederOptions)
